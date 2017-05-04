@@ -26,7 +26,7 @@ print(len(trainData))
 print(len(trainData[0]))
 print(len(trainData[0][0]))
 print(len(trainData[0][0][0]))
-print(trainData)
+#print(trainData)
 
 trainData = trainData.astype('float32')
 testData = testData.astype('float32')
@@ -62,3 +62,6 @@ print('evalResult: ', evalResult)
 model.save('cifarCNN.h5')
 print('model saved.')
 
+with open('cifarCNNResults.txt', 'w') as f:
+	f.write('mets: ' + model.metrics_names[0] + ' ' + model.metrics_names[1])
+	f.write('\nevalResult: ' + str(evalResult[0]) + ' ' + str(evalResult[1]))

@@ -30,3 +30,7 @@ print('evalResult: ', evalResult)
 
 model.save('ferRes.h5')
 print('model saved.')
+
+with open('ferResnetResults.txt', 'w') as f:
+	f.write('mets: ' + model.metrics_names[0] + ' ' + model.metrics_names[1])
+	f.write('\nevalResult: ' + str(evalResult[0]) + ' ' + str(evalResult[1]))
