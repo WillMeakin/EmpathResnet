@@ -57,7 +57,7 @@ def rnpa_bottleneck_layer(input_tensor, nb_filters, filter_sz, stage,
     return x
 
 
-def ResNetPreAct(input_shape=(48, 48, 1), nb_classes=7,
+def ResNetPreAct(input_shape=(1, 48, 48), nb_classes=7,
                  layer1_params=(5, 64, 2),
                  res_layer_params=(3, 16, 3),
                  final_layer_params=None,
