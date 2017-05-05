@@ -1,9 +1,10 @@
+from keras.optimizers import Adam
 from keras.datasets import cifar10
 from keras.utils import to_categorical
 import resnetJPCifar
 from myResnet import makeModel
 
-epochs = 100
+nEpochs = 100
 batch_size = 32
 nClasses = 10
 
@@ -23,7 +24,6 @@ testData = testData.astype('float32')
 trainData /= 255
 testData /= 255
 
-#model = resnetJPCifar.ResNetPreAct() #TODO: run with comment args
 model = makeModel(trainData.shape[1:], #input shape (check channels_first/last)
 				  nClasses, #number of classes
 				  (128, 3, 2), #Layer1 (Conv2D) args (FilterN, FilterDim, Stride) #TODO: check against paper
@@ -32,15 +32,26 @@ model = makeModel(trainData.shape[1:], #input shape (check channels_first/last)
 				  0.0, #kernel regulariser: l2(reg)
 				  25) #nBottlenecks
 
+opt = Adam()
 model.compile(loss='categorical_crossentropy',
-              optimizer='adam',
+              optimizer=opt,
               metrics=['accuracy'])
 
-model.fit(trainData, trainLabels,
-		  batch_size=batch_size,
-		  epochs=epochs,
-		  validation_split=0.15,
-		  shuffle=True)
+#TODO: loop fit to change learning rate between epochs (TEST)
+
+for epoch in range(nEpochs):
+	if epoch == 2: #default 50
+		opt.lr = 0.0001
+	elif epoch == 3: #default 75
+		opt.lr = 0.00001
+
+	print('LR: ', opt.lr, ' at epoch: ', epoch)
+
+	model.fit(trainData, trainLabels,
+			  batch_size=batch_size,
+			  epochs=1,
+			  validation_split=0.15,
+			  shuffle=True)
 
 evalResult = model.evaluate(testData, testLabels)
 

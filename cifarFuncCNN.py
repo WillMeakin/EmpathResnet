@@ -1,14 +1,15 @@
-from __future__ import print_function
 import keras
 from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential, Model
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Conv2D, MaxPooling2D, Input
+from keras.optimizers import Adam
+
 
 batch_size = 32
 num_classes = 10
-epochs = 1
+nEpochs = 10
 
 # The data, shuffled and split between train and test sets:
 (trainData, trainLabels), (testData, testLabels) = cifar10.load_data()
@@ -21,11 +22,6 @@ trainLabels = keras.utils.to_categorical(trainLabels, num_classes)
 testLabels = keras.utils.to_categorical(testLabels, num_classes)
 
 print('trainData shape:', trainData.shape)
-print('cifarPrints: ', type(trainData), type(trainData[0]), type(trainData[0][0]), type(trainData[0][0][0]), type(trainData[0][0][0][0]))
-print(len(trainData))
-print(len(trainData[0]))
-print(len(trainData[0][0]))
-print(len(trainData[0][0][0]))
 #print(trainData)
 
 trainData = trainData.astype('float32')
@@ -45,15 +41,26 @@ predictions = Activation('softmax')(x)
 
 model = Model(inputs=inputs, outputs=predictions)
 
+opt = Adam()
 model.compile(loss='categorical_crossentropy',
-              optimizer='adam',
+              optimizer=opt,
               metrics=['accuracy'])
 
-model.fit(trainData, trainLabels,
-		  batch_size=batch_size,
-		  epochs=epochs,
-		  validation_split=0.15,
-		  shuffle=True)
+for epoch in range(nEpochs):
+	if epoch == 2: #default 50
+		opt.lr = 0.0001
+	elif epoch == 3: #default 75
+		opt.lr = 0.00001
+
+	print('LR: ', opt.lr, ' at epoch: ', epoch)
+
+	model.fit(trainData, trainLabels,
+			  batch_size=batch_size,
+			  epochs=1,
+			  validation_split=0.15,
+			  shuffle=True)
+
+
 evalResult = model.evaluate(testData, testLabels)
 
 print('\n\nmets: ', model.metrics_names)

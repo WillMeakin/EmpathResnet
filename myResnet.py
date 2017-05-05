@@ -32,7 +32,7 @@ def bottleneck(inTensor, L1Args, LBArgs, kernelInit, kernelReg, axis):
 				kernel_initializer=kernelInit,
 				kernel_regularizer=l2(kernelReg))(x)
 
-	x = add([x, inTensor]) #Merge residual and bottleneck tensors
+	x = add([x, inTensor]) #Merge identity and bottleneck tensors
 	return x
 
 #L1Args and LBArgs = (FilterN, FilterDim, Stride)
@@ -74,6 +74,4 @@ def makeModel(inShape, nClasses, L1Args, LBArgs, kernelInit, kernelReg, nBottlen
 	x = Flatten()(x)
 	predictions = Dense(nClasses, activation='softmax')
 
-
-
-	model = Model(input=inputs, outputs=predictions)
+	return Model(input=inputs, outputs=predictions)

@@ -12,7 +12,6 @@ epochs = 100 #default 100
 batchSize = 32 #28709/32=897 batches per epoch (fer)
 nClasses = len(trainLabels[0]) #7 (fer)
 
-#model = ResNetPreAct() #TODO: adapt to WRN
 model = makeModel(trainData.shape[1:], #input shape (check channels_first/last)
 				  nClasses, #number of classes
 				  (128, 3, 2), #Layer1 (Conv2D) args (FilterN, FilterDim, Stride) #TODO: check against paper
@@ -25,6 +24,7 @@ model.compile(optimizer='adam',
 			  loss='categorical_crossentropy',
 			  metrics=['accuracy'])
 
+#TODO: loop fit to change learning rate between epochs (DONE IN CIFAR)
 model.fit(trainData, trainLabels,
 		  batch_size=batchSize,
 		  epochs=epochs,
