@@ -14,7 +14,6 @@ def readCSV(fileName, rowDim, channels, useIDs=('Training', 'Validation', 'Test'
 	validationData = []
 	testLabels = []
 	testData = []
-	shapeTuple = ()
 
 	if image_data_format() == 'channels_last':
 		shapeTuple = (rowDim, rowDim, channels)
@@ -47,7 +46,7 @@ def readCSV(fileName, rowDim, channels, useIDs=('Training', 'Validation', 'Test'
 			else:
 				print("Err: don't know what this row is for; check useIDs arg", row)
 
-	#TODO: should valid/test labels use train labels' length? In case they don't have all types in them.
+	#TODO: should valid/test labels use train labels' unique length? In case they don't have all types in them.
 	#reformat for keras (and type->np.ndarray)
 	trainLabels = to_categorical(trainLabels, num_classes=len(np.unique(trainLabels)))
 	validationLabels = to_categorical(validationLabels, num_classes=len(np.unique(validationLabels)))

@@ -1,5 +1,6 @@
 from dataParser import readCSV
 from resnetJPFer import ResNetPreAct
+from myResnet import makeModel
 
 (trainLabels, trainData, validationLabels, validationData, testLabels, testData) = \
 	readCSV('datasets/fer2013.csv', 48, 1, ('Training', 'PrivateTest', 'PublicTest'))
@@ -9,9 +10,16 @@ print("dataShape: ", trainData.shape)
 
 epochs = 100 #default 100
 batchSize = 32 #28709/32=897 batches per epoch (fer)
-numClasses = len(trainLabels[0]) #7 (fer)
+nClasses = len(trainLabels[0]) #7 (fer)
 
-model = ResNetPreAct() #TODO: adapt to fer
+#model = ResNetPreAct() #TODO: adapt to WRN
+model = makeModel(trainData.shape[1:], #input shape (check channels_first/last)
+				  nClasses, #number of classes
+				  (128, 3, 2), #Layer1 (Conv2D) args (FilterN, FilterDim, Stride) #TODO: check against paper
+				  (32, 3), #bottleneck layer Conv2D args (FilterN, FilterDim)
+				  'glorot_normal', #kernel initialiser
+				  0.0, #kernel regulariser: l2(reg)
+				  25) #nBottlenecks
 
 model.compile(optimizer='adam',
 			  loss='categorical_crossentropy',
